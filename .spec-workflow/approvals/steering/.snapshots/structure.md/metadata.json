@@ -1,0 +1,22 @@
+{
+  "filePath": ".spec-workflow/steering/structure.md",
+  "currentVersion": 2,
+  "snapshots": [
+    {
+      "version": 1,
+      "filename": "snapshot-001.json",
+      "timestamp": "2026-01-06T03:29:37.720Z",
+      "trigger": "initial",
+      "approvalId": "approval_1767670177695_ylrm4sakh",
+      "approvalTitle": "项目结构文档 (structure.md) - 文档组织规范"
+    },
+    {
+      "version": 2,
+      "filename": "snapshot-002.json",
+      "timestamp": "2026-01-06T03:32:08.246Z",
+      "trigger": "approved",
+      "approvalId": "approval_1767670177695_ylrm4sakh",
+      "approvalTitle": "项目结构文档 (structure.md) - 文档组织规范"
+    }
+  ]
+}

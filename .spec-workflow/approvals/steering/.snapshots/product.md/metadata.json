@@ -1,0 +1,22 @@
+{
+  "filePath": ".spec-workflow/steering/product.md",
+  "currentVersion": 2,
+  "snapshots": [
+    {
+      "version": 1,
+      "filename": "snapshot-001.json",
+      "timestamp": "2026-01-06T03:18:01.306Z",
+      "trigger": "initial",
+      "approvalId": "approval_1767669481297_5iq034zz5",
+      "approvalTitle": "产品指导文档 (product.md)"
+    },
+    {
+      "version": 2,
+      "filename": "snapshot-002.json",
+      "timestamp": "2026-01-06T03:19:03.005Z",
+      "trigger": "approved",
+      "approvalId": "approval_1767669481297_5iq034zz5",
+      "approvalTitle": "产品指导文档 (product.md)"
+    }
+  ]
+}

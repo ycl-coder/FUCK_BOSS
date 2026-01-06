@@ -1,0 +1,22 @@
+{
+  "filePath": ".spec-workflow/specs/content-management-v1/design.md",
+  "currentVersion": 2,
+  "snapshots": [
+    {
+      "version": 1,
+      "filename": "snapshot-001.json",
+      "timestamp": "2026-01-06T03:59:14.534Z",
+      "trigger": "initial",
+      "approvalId": "approval_1767671954529_ncbz53qf5",
+      "approvalTitle": "设计文档 (design.md) - DDD架构设计、组件设计、数据模型"
+    },
+    {
+      "version": 2,
+      "filename": "snapshot-002.json",
+      "timestamp": "2026-01-06T04:00:34.526Z",
+      "trigger": "approved",
+      "approvalId": "approval_1767671954529_ncbz53qf5",
+      "approvalTitle": "设计文档 (design.md) - DDD架构设计、组件设计、数据模型"
+    }
+  ]
+}

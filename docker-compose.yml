@@ -1,0 +1,94 @@
+# Docker Compose configuration for development and production
+# This file provides PostgreSQL, Redis, and Backend services
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: docker.m.daocloud.io/postgres:16-alpine
+    container_name: fuck_boss_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_DB: fuck_boss
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fuck_boss"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fuck_boss_network
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: docker.m.daocloud.io/redis:7-alpine
+    container_name: fuck_boss_redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - fuck_boss_network
+    restart: unless-stopped
+
+  # Backend gRPC Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fuck_boss_backend
+    environment:
+      # Database configuration
+      FUCK_BOSS_DATABASE_HOST: postgres
+      FUCK_BOSS_DATABASE_PORT: 5432
+      FUCK_BOSS_DATABASE_USER: postgres
+      FUCK_BOSS_DATABASE_PASSWORD: postgres_password
+      FUCK_BOSS_DATABASE_DBNAME: fuck_boss
+      FUCK_BOSS_DATABASE_SSLMODE: disable
+      # Redis configuration
+      FUCK_BOSS_REDIS_HOST: redis
+      FUCK_BOSS_REDIS_PORT: 6379
+      FUCK_BOSS_REDIS_PASSWORD: ""
+      FUCK_BOSS_REDIS_DB: 0
+      # gRPC configuration
+      FUCK_BOSS_GRPC_PORT: 50051
+      # Log configuration
+      FUCK_BOSS_LOG_LEVEL: info
+      FUCK_BOSS_LOG_FORMAT: json
+    ports:
+      - "50051:50051"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - fuck_boss_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "50051"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  fuck_boss_network:
+    driver: bridge
+

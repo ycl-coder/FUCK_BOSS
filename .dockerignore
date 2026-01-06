@@ -1,0 +1,48 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+bin/
+dist/
+build/
+
+# Dependencies
+vendor/
+node_modules/
+
+# Test files
+coverage.out
+coverage.html
+*.log
+
+# Config files (use config.example.yaml)
+config/config.yaml
+
+# Test environment
+docker-compose.test.yml
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Temporary files
+tmp/
+temp/
+uploads/
+logs/
+
