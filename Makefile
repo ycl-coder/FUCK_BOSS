@@ -56,6 +56,16 @@ frontend-build: ## 构建前端
 frontend-test: ## 运行前端测试
 	cd frontend && npm test
 
+frontend-preview: ## 预览前端构建产物
+	cd frontend && npm run preview
+
+frontend-verify: ## 验证前端构建（TypeScript 编译 + Vite 构建）
+	@echo "🔍 验证前端项目..."
+	cd frontend && npm run build && echo "✅ 前端构建验证通过"
+
+frontend-generate-grpc: ## 生成前端 gRPC Web 代码
+	cd frontend && ./scripts/generate-grpc.sh
+
 # 数据库命令
 db-migrate-up: ## 运行数据库迁移（向上）
 	cd backend && migrate -path internal/infrastructure/persistence/postgres/migrations -database "postgres://user:password@localhost:5432/dbname?sslmode=disable" up

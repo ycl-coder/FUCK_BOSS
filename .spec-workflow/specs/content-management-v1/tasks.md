@@ -356,7 +356,7 @@
 
 ### 任务 6.1: 前端基础设置
 
-- [ ] 6.1. 初始化 React 项目
+- [x] 6.1. 初始化 React 项目
   - Files: `frontend/package.json`, `frontend/vite.config.ts`, `frontend/tsconfig.json`
   - 使用 Vite + TypeScript + React
   - Purpose: 建立前端项目基础
@@ -364,7 +364,7 @@
   - _Requirements: Frontend setup
   - _Prompt: Role: Frontend Developer specializing in React and Vite | Task: Initialize React project with Vite, TypeScript, and React. Configure Vite for development and production builds. Set up TypeScript configuration. Install dependencies: React, React Router, gRPC Web client, UI library (antd or MUI), state management (zustand). Follow frontend best practices. | Restrictions: Must use Vite, TypeScript, React 18+, configure properly | Success: Project initializes correctly, all dependencies installed, build works_
 
-- [ ] 6.2. 设置 gRPC Web 客户端
+- [-] 6.2. 设置 gRPC Web 客户端
   - Files: `frontend/src/api/grpc/client.ts`, `frontend/src/api/grpc/contentClient.ts`
   - 配置 gRPC Web 客户端
   - Purpose: 连接后端 gRPC 服务
@@ -461,6 +461,17 @@
 ## 任务完成检查清单
 
 每个任务完成后，必须完成以下检查：
+
+### ⚠️ 代码提交（必须）
+
+- [ ] **代码已提交到 Git 仓库**
+  - 提交信息清晰描述完成的工作
+  - 格式：`feat: [任务ID] 任务描述` 或 `fix: [任务ID] 修复描述`
+  - 示例：`feat: [1.2] 实现统一错误处理包`
+  - 已推送到远程仓库（如需要）
+  - 确保敏感文件（如 `config.yaml`）不被提交
+
+**重要**：未提交代码的任务视为未完成，不得进入下一个任务。
 
 ### 代码质量
 - [ ] 8.1. 代码通过 `gofmt` 格式化

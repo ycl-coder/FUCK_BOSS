@@ -7,6 +7,9 @@
 ### 必需软件
 
 - **Go 1.24+**: [下载地址](https://golang.org/dl/)
+- **Node.js 20.19+ 或 22.12+**: [下载地址](https://nodejs.org/)（前端开发必需）
+  - 推荐使用 nvm 管理 Node.js 版本：`nvm install 20`
+  - 详见 [Node.js 升级指南](./nodejs-upgrade.md)
 - **Docker 20.10+**: [下载地址](https://www.docker.com/get-started)
 - **Docker Compose 2.0+**: 通常随 Docker Desktop 一起安装
 - **Protocol Buffers 编译器**: 
