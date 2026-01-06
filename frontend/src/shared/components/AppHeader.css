@@ -1,0 +1,94 @@
+/* AppHeader 样式 - 响应式设计 */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  background: linear-gradient(135deg, #001529 0%, #002140 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.app-header-brand {
+  margin-right: 48px;
+  min-width: 180px;
+}
+
+.brand-link {
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.brand-link:hover {
+  opacity: 0.9;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.brand-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.app-header-menu {
+  flex: 1;
+  min-width: 0;
+  border-bottom: none;
+  background: transparent;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 16px;
+  }
+
+  .app-header-brand {
+    margin-right: 16px;
+    min-width: 120px;
+  }
+
+  .brand-name {
+    font-size: 18px;
+  }
+
+  .brand-subtitle {
+    font-size: 11px;
+  }
+
+  .app-header-menu {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 576px) {
+  .app-header {
+    padding: 0 12px;
+  }
+
+  .app-header-brand {
+    margin-right: 12px;
+    min-width: 100px;
+  }
+
+  .brand-name {
+    font-size: 16px;
+  }
+
+  .brand-subtitle {
+    display: none;
+  }
+}
+

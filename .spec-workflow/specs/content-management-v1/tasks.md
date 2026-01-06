@@ -364,7 +364,7 @@
   - _Requirements: Frontend setup
   - _Prompt: Role: Frontend Developer specializing in React and Vite | Task: Initialize React project with Vite, TypeScript, and React. Configure Vite for development and production builds. Set up TypeScript configuration. Install dependencies: React, React Router, gRPC Web client, UI library (antd or MUI), state management (zustand). Follow frontend best practices. | Restrictions: Must use Vite, TypeScript, React 18+, configure properly | Success: Project initializes correctly, all dependencies installed, build works_
 
-- [-] 6.2. 设置 gRPC Web 客户端
+- [x] 6.2. 设置 gRPC Web 客户端
   - Files: `frontend/src/api/grpc/client.ts`, `frontend/src/api/grpc/contentClient.ts`
   - 配置 gRPC Web 客户端
   - Purpose: 连接后端 gRPC 服务
@@ -374,7 +374,7 @@
 
 ### 任务 6.2: 前端组件开发
 
-- [ ] 6.3. 创建发布表单组件
+- [x] 6.3. 创建发布表单组件
   - File: `frontend/src/features/post/components/PostForm.tsx`
   - 实现发布曝光内容的表单
   - Purpose: 用户发布界面
@@ -382,7 +382,7 @@
   - _Requirements: Requirement 1 (前端部分)
   - _Prompt: Role: Frontend Developer specializing in React forms | Task: Create PostForm component with fields: company (input), city (select), content (textarea), occurredAt (date picker, optional). Add validation (client-side). Handle form submission, loading state, error state. Use UI library components. Follow React best practices. | Restrictions: Must validate inputs, handle all states, use UI library | Success: Form works correctly, validation works, submission works_
 
-- [ ] 6.4. 创建列表组件
+- [x] 6.4. 创建列表组件
   - File: `frontend/src/features/post/components/PostList.tsx`
   - 实现内容列表展示
   - Purpose: 显示曝光内容列表
@@ -390,7 +390,7 @@
   - _Requirements: Requirement 2 (前端部分)
   - _Prompt: Role: Frontend Developer | Task: Create PostList component that displays list of posts. Show: company name, city, content summary, created time. Support pagination. Handle loading and error states. Use UI library components. | Restrictions: Must support pagination, handle all states | Success: List displays correctly, pagination works_
 
-- [ ] 6.5. 创建详情组件
+- [x] 6.5. 创建详情组件
   - File: `frontend/src/features/post/components/PostDetail.tsx`
   - 实现内容详情展示
   - Purpose: 显示内容详情
@@ -398,7 +398,7 @@
   - _Requirements: Requirement 3 (前端部分)
   - _Prompt: Role: Frontend Developer | Task: Create PostDetail component that displays full post details. Show all fields. Handle loading and error states (404). | Restrictions: Must handle 404, loading states | Success: Detail displays correctly, 404 handled_
 
-- [ ] 6.6. 创建搜索组件
+- [x] 6.6. 创建搜索组件
   - File: `frontend/src/features/search/components/SearchBar.tsx`, `SearchResults.tsx`
   - 实现搜索功能
   - Purpose: 搜索曝光内容
@@ -408,7 +408,7 @@
 
 ### 任务 6.3: 前端路由和集成
 
-- [ ] 6.7. 设置前端路由
+- [x] 6.7. 设置前端路由
   - File: `frontend/src/app/routes.tsx`
   - 配置 React Router
   - Purpose: 页面路由

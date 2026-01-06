@@ -1,0 +1,56 @@
+/* CreatePostPage 样式 - 响应式设计 */
+
+.create-post-page {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.create-post-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+}
+
+.create-post-header {
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.create-post-title {
+  margin-bottom: 8px !important;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.create-post-subtitle {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .create-post-page {
+    padding: 0;
+  }
+
+  .create-post-card {
+    border-radius: 8px;
+  }
+
+  .create-post-title {
+    font-size: 24px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .create-post-title {
+    font-size: 20px !important;
+  }
+
+  .create-post-subtitle {
+    font-size: 13px;
+  }
+}
+

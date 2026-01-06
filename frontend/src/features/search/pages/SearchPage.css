@@ -1,0 +1,64 @@
+/* SearchPage 样式 - 响应式设计 */
+
+.search-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.search-page-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+}
+
+.search-page-title {
+  margin-bottom: 8px !important;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.search-page-subtitle {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.search-page-bar {
+  margin-bottom: 24px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .search-page {
+    padding: 0;
+  }
+
+  .search-page-card {
+    border-radius: 8px;
+  }
+
+  .search-page-title {
+    font-size: 24px !important;
+  }
+
+  .search-page-subtitle {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-page-title {
+    font-size: 20px !important;
+  }
+
+  .search-page-subtitle {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+
+  .search-page-bar {
+    margin-bottom: 16px;
+  }
+}
+

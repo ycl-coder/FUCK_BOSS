@@ -1,0 +1,108 @@
+/* SearchResults 样式 - 响应式设计 */
+
+.search-results-loading {
+  text-align: center;
+  padding: 50px 0;
+}
+
+.search-results-header {
+  margin-bottom: 16px;
+}
+
+.search-results-count {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.search-results-item {
+  margin-bottom: 16px;
+}
+
+.search-results-card {
+  width: 100%;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+
+.search-results-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.search-results-header-info {
+  margin-bottom: 12px;
+}
+
+.search-results-company {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.search-results-content {
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.search-results-footer {
+  text-align: right;
+}
+
+.search-results-time {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.search-results-pagination {
+  text-align: center;
+  margin-top: 24px;
+}
+
+/* 关键词高亮 */
+.search-highlight {
+  background-color: #ffeb3b;
+  padding: 0;
+  font-weight: 500;
+  border-radius: 2px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .search-results-item {
+    margin-bottom: 12px;
+  }
+
+  .search-results-card {
+    border-radius: 6px;
+  }
+
+  .search-results-company {
+    font-size: 15px;
+  }
+
+  .search-results-content {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-results-item {
+    margin-bottom: 8px;
+  }
+
+  .search-results-company {
+    font-size: 14px;
+  }
+
+  .search-results-content {
+    font-size: 13px;
+  }
+
+  .search-results-pagination {
+    margin-top: 16px;
+  }
+}
+

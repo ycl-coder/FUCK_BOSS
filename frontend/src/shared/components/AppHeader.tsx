@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { Layout, Menu } from 'antd'
 import { HomeOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import './AppHeader.css'
 
 const { Header } = Layout
 
@@ -26,16 +27,19 @@ export function AppHeader() {
   ]
 
   return (
-    <Header style={{ display: 'flex', alignItems: 'center' }}>
-      <div style={{ color: '#fff', fontSize: '20px', fontWeight: 'bold', marginRight: '24px' }}>
-        Fuck Boss
+    <Header className="app-header">
+      <div className="app-header-brand">
+        <Link to="/" className="brand-link">
+          <span className="brand-name">Fuck Boss</span>
+          <span className="brand-subtitle">公司曝光平台</span>
+        </Link>
       </div>
       <Menu
         theme="dark"
         mode="horizontal"
         selectedKeys={[location.pathname]}
         items={menuItems}
-        style={{ flex: 1, minWidth: 0 }}
+        className="app-header-menu"
       />
     </Header>
   )

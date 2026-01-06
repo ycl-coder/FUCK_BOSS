@@ -1,6 +1,31 @@
-/* App specific styles */
+/* App 特定样式 */
 
 .app-container {
   min-height: 100vh;
+  background-color: var(--bg-secondary);
 }
 
+/* 响应式布局辅助类 */
+@media (max-width: 576px) {
+  .hide-xs {
+    display: none !important;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .hide-sm {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+  .hide-md {
+    display: none !important;
+  }
+}
+
+@media (min-width: 993px) {
+  .hide-lg {
+    display: none !important;
+  }
+}

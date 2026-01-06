@@ -1,0 +1,63 @@
+/* Routes 布局样式 - 响应式设计 */
+
+.app-layout {
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+}
+
+.app-content {
+  min-height: calc(100vh - 64px - 80px);
+  padding: var(--spacing-lg);
+  background-color: var(--bg-secondary);
+}
+
+/* 响应式内容区域 */
+@media (max-width: 768px) {
+  .app-content {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 576px) {
+  .app-content {
+    padding: var(--spacing-sm);
+  }
+}
+
+.app-footer {
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+  border-top: 1px solid var(--border-color);
+  padding: var(--spacing-lg) var(--spacing-md);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-content p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.footer-subtitle {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+@media (max-width: 576px) {
+  .app-footer {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  .footer-content p {
+    font-size: 13px;
+  }
+
+  .footer-subtitle {
+    font-size: 11px;
+  }
+}
+
