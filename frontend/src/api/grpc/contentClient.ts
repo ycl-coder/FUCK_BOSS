@@ -18,8 +18,10 @@ class GrpcWebContentServiceClient implements ContentServiceClient {
   private baseUrl: string
 
   constructor(baseUrl?: string) {
-    // Remove trailing slash
-    this.baseUrl = (baseUrl || config.grpcUrl).replace(/\/$/, '')
+    // Use provided baseUrl, or config, or empty string (relative path)
+    // Empty string means use relative paths, which will go through Vite proxy or Nginx proxy
+    const url = baseUrl || config.grpcUrl || ''
+    this.baseUrl = url.replace(/\/$/, '')
   }
 
   private async call<TRequest, TResponse>(
@@ -28,7 +30,9 @@ class GrpcWebContentServiceClient implements ContentServiceClient {
     method: 'GET' | 'POST' = 'POST'
   ): Promise<TResponse> {
     // Use REST API endpoint
-    const url = `${this.baseUrl}${endpoint}`
+    // If baseUrl is empty, use relative path (will use current domain)
+    // This allows Vite proxy (dev) or Nginx proxy (prod) to forward to backend
+    const url = this.baseUrl ? `${this.baseUrl}${endpoint}` : endpoint
     
     try {
       const options: RequestInit = {

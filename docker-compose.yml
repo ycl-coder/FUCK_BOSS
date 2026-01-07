@@ -88,15 +88,17 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        # Backend API URL (used at build time via Vite env vars)
-        VITE_GRPC_URL: http://backend:50051
-        VITE_API_BASE_URL: http://backend:50051
+        # Backend API URL - use empty string to use relative paths
+        # This allows Nginx proxy to forward /api requests to backend
+        VITE_GRPC_URL: ""
+        VITE_API_BASE_URL: ""
     container_name: fuck_boss_frontend
     ports:
       - "8000:80"
-    depends_on:
-      backend:
-        condition: service_healthy
+    # Add extra_hosts to access host machine from Docker container
+    # This allows Nginx to proxy to localhost:50051 on the host
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - fuck_boss_network
     restart: unless-stopped
