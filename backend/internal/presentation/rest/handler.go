@@ -95,13 +95,13 @@ type ListPostsRequest struct {
 
 // PostResponse is the JSON response for a post.
 type PostResponse struct {
-	ID         string  `json:"id"`
-	Company    string  `json:"company"`
-	CityCode   string  `json:"cityCode"`
-	CityName   string  `json:"cityName"`
-	Content    string  `json:"content"`
-	OccurredAt *int64  `json:"occurredAt,omitempty"`
-	CreatedAt  int64   `json:"createdAt"`
+	ID         string `json:"id"`
+	Company    string `json:"company"`
+	CityCode   string `json:"cityCode"`
+	CityName   string `json:"cityName"`
+	Content    string `json:"content"`
+	OccurredAt *int64 `json:"occurredAt,omitempty"`
+	CreatedAt  int64  `json:"createdAt"`
 }
 
 // ListPostsResponse is the JSON response for listing posts.
@@ -402,4 +402,3 @@ func extractClientIP(r *http.Request) string {
 	// Fallback to RemoteAddr
 	return r.RemoteAddr
 }
-

@@ -156,24 +156,24 @@ func main() {
 	// Create HTTP mux for routing
 	mux := http.NewServeMux()
 
-	// REST API routes
-	mux.HandleFunc("/api/posts", func(w http.ResponseWriter, r *http.Request) {
+	// REST API routes with CORS support
+	mux.HandleFunc("/api/posts", middleware.CORSMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
 			restHandler.CreatePost(w, r)
 		} else {
 			restHandler.ListPosts(w, r)
 		}
-	})
-	mux.HandleFunc("/api/posts/", func(w http.ResponseWriter, r *http.Request) {
+	}))
+	mux.HandleFunc("/api/posts/", middleware.CORSMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/api/posts/" {
 			restHandler.ListPosts(w, r)
 		} else {
 			restHandler.GetPost(w, r)
 		}
-	})
-	mux.HandleFunc("/api/posts/search", restHandler.SearchPosts)
+	}))
+	mux.HandleFunc("/api/posts/search", middleware.CORSMiddleware(restHandler.SearchPosts))
 
-	// gRPC Web handler
+	// gRPC Web handler (already has CORS support via grpcweb)
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if wrappedServer.IsGrpcWebRequest(r) || wrappedServer.IsAcceptableGrpcCorsRequest(r) {
 			wrappedServer.ServeHTTP(w, r)
