@@ -416,7 +416,7 @@
   - _Requirements: Frontend routing
   - _Prompt: Role: Frontend Developer | Task: Set up React Router with routes: / (home/list), /post/:id (detail), /create (create form), /search (search page). Create layout component. | Restrictions: Must use React Router, proper route structure | Success: Routing works correctly_
 
-- [ ] 6.8. 前端 E2E 测试
+- [-] 6.8. 前端 E2E 测试
   - Files: `frontend/test/e2e/flows/create_and_view.test.ts`, `search.test.ts`
   - 使用 Playwright 或 Cypress
   - Purpose: 验证完整用户流程
@@ -430,15 +430,15 @@
 
 ### 任务 7.1: Docker 和部署
 
-- [ ] 7.1. 创建 Docker 配置
-  - Files: `docker-compose.yml`, `backend/Dockerfile`, `frontend/Dockerfile`
+- [x] 7.1. 创建 Docker 配置
+  - Files: `docker-compose.yml`, `backend/Dockerfile`
   - 配置开发和生产环境
   - Purpose: 容器化部署
   - _Leverage: Docker, Docker Compose
   - _Requirements: Deployment
   - _Prompt: Role: DevOps Engineer specializing in Docker | Task: Create Docker configuration for development and production. docker-compose.yml: PostgreSQL, Redis, backend service, frontend service. Dockerfiles for backend and frontend. Configure networking, volumes, environment variables. | Restrictions: Must support development and production, proper networking | Success: Docker setup works, all services start correctly_
 
-- [ ] 7.2. 创建部署文档
+- [x] 7.2. 创建部署文档
   - Files: `docs/deployment/docker-deploy.md`, `docs/deployment/production-deploy.md`
   - 编写部署指南
   - Purpose: 部署文档
@@ -448,7 +448,7 @@
 
 ### 任务 7.2: 开发文档
 
-- [ ] 7.3. 创建开发指南
+- [x] 7.3. 创建开发指南
   - Files: `docs/development/setup-guide.md`, `docs/development/development-guide.md`, `docs/development/testing-guide.md`
   - 编写开发环境搭建和开发指南
   - Purpose: 帮助开发者快速上手
