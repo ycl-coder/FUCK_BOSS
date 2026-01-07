@@ -416,9 +416,9 @@
   - _Requirements: Frontend routing
   - _Prompt: Role: Frontend Developer | Task: Set up React Router with routes: / (home/list), /post/:id (detail), /create (create form), /search (search page). Create layout component. | Restrictions: Must use React Router, proper route structure | Success: Routing works correctly_
 
-- [-] 6.8. 前端 E2E 测试
-  - Files: `frontend/test/e2e/flows/create_and_view.test.ts`, `search.test.ts`
-  - 使用 Playwright 或 Cypress
+- [x] 6.8. 前端 E2E 测试
+  - Files: `frontend/test/e2e/flows/create-and-view.spec.ts`, `search.spec.ts`, `navigation.spec.ts`
+  - 使用 Playwright
   - Purpose: 验证完整用户流程
   - _Leverage: Playwright/Cypress
   - _Requirements: Testing Strategy - E2E Testing
