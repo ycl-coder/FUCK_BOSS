@@ -9,7 +9,9 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
+	"github.com/redis/go-redis/v9"
 	"fuck_boss/backend/internal/infrastructure/config"
+	redispersistence "fuck_boss/backend/internal/infrastructure/persistence/redis"
 )
 
 func main() {
@@ -169,5 +171,29 @@ func main() {
 	}
 
 	fmt.Printf("\nSuccessfully inserted %d mock posts\n", len(mockPosts))
+
+	// Clear cache to ensure new data is visible
+	fmt.Println("\nClearing cache...")
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%d", cfg.Redis.Host, cfg.Redis.Port),
+		Password: cfg.Redis.Password,
+		DB:       cfg.Redis.DB,
+	})
+	defer redisClient.Close()
+
+	if err := redisClient.Ping(ctx).Err(); err != nil {
+		log.Printf("Warning: Failed to connect to Redis: %v. Cache may contain stale data.", err)
+		return
+	}
+
+	cacheRepo := redispersistence.NewCacheRepository(redisClient)
+	
+	// Delete all post-related cache keys
+	err = cacheRepo.DeleteByPattern(ctx, "posts:*")
+	if err != nil {
+		log.Printf("Warning: Failed to clear cache: %v. You may need to wait for cache to expire.", err)
+	} else {
+		fmt.Println("Cache cleared successfully")
+	}
 }
 
