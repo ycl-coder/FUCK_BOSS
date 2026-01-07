@@ -14,6 +14,8 @@
 .app-header-brand {
   margin-right: 48px;
   min-width: 180px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .brand-link {
@@ -22,6 +24,7 @@
   color: #fff;
   text-decoration: none;
   transition: opacity 0.3s ease;
+  line-height: 1.2;
 }
 
 .brand-link:hover {
@@ -33,6 +36,9 @@
   font-weight: 600;
   letter-spacing: 0.5px;
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .brand-subtitle {
@@ -40,6 +46,9 @@
   opacity: 0.8;
   font-weight: 400;
   margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .app-header-menu {
@@ -47,9 +56,17 @@
   min-width: 0;
   border-bottom: none;
   background: transparent;
+  overflow: hidden;
 }
 
 /* 响应式设计 */
+@media (max-width: 992px) {
+  .app-header-brand {
+    margin-right: 24px;
+    min-width: 150px;
+  }
+}
+
 @media (max-width: 768px) {
   .app-header {
     padding: 0 16px;
@@ -57,7 +74,7 @@
 
   .app-header-brand {
     margin-right: 16px;
-    min-width: 120px;
+    min-width: 140px;
   }
 
   .brand-name {
@@ -79,8 +96,8 @@
   }
 
   .app-header-brand {
-    margin-right: 12px;
-    min-width: 100px;
+    margin-right: 8px;
+    min-width: 120px;
   }
 
   .brand-name {
@@ -89,6 +106,10 @@
 
   .brand-subtitle {
     display: none;
+  }
+
+  .app-header-menu {
+    font-size: 12px;
   }
 }
 

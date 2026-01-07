@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, Typography } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { SearchBar } from '../components/SearchBar'
 import { SearchResults } from '../components/SearchResults'
 import './SearchPage.css'
@@ -9,12 +9,34 @@ const { Title } = Typography
 
 export function SearchPage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [keyword, setKeyword] = useState('')
   const [cityCode, setCityCode] = useState<string | undefined>()
+
+  // 从 URL 参数初始化搜索关键词和城市
+  useEffect(() => {
+    const urlKeyword = searchParams.get('keyword')
+    const urlCity = searchParams.get('city')
+    if (urlKeyword) {
+      setKeyword(urlKeyword)
+    }
+    if (urlCity) {
+      setCityCode(urlCity)
+    }
+  }, [searchParams])
 
   const handleSearch = (searchKeyword: string, searchCityCode?: string) => {
     setKeyword(searchKeyword)
     setCityCode(searchCityCode)
+    // 更新 URL 参数
+    const params = new URLSearchParams()
+    if (searchKeyword) {
+      params.set('keyword', searchKeyword)
+    }
+    if (searchCityCode) {
+      params.set('city', searchCityCode)
+    }
+    navigate(`/search?${params.toString()}`, { replace: true })
   }
 
   const handlePostClick = (postId: string) => {
