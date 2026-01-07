@@ -8,10 +8,10 @@ import (
 	"log"
 	"time"
 
-	_ "github.com/lib/pq"
-	"github.com/redis/go-redis/v9"
 	"fuck_boss/backend/internal/infrastructure/config"
 	redispersistence "fuck_boss/backend/internal/infrastructure/persistence/redis"
+	_ "github.com/lib/pq"
+	"github.com/redis/go-redis/v9"
 )
 
 func main() {
@@ -142,7 +142,7 @@ func main() {
 	for i, post := range mockPosts {
 		// Create varied timestamps (some older, some newer)
 		createdAt := now.Add(-time.Duration(12-i) * 24 * time.Hour) // Spread over 12 days
-		
+
 		// Some posts have occurred_at, some don't
 		var occurredAt *time.Time
 		if i%3 == 0 { // Every 3rd post has occurred_at
@@ -187,7 +187,7 @@ func main() {
 	}
 
 	cacheRepo := redispersistence.NewCacheRepository(redisClient)
-	
+
 	// Delete all post-related cache keys
 	err = cacheRepo.DeleteByPattern(ctx, "posts:*")
 	if err != nil {
@@ -196,4 +196,3 @@ func main() {
 		fmt.Println("Cache cleared successfully")
 	}
 }
-

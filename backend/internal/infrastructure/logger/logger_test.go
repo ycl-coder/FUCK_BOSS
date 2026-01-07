@@ -65,9 +65,9 @@ func TestNewLogger_WithConfig(t *testing.T) {
 
 func TestNewLoggerFromConfig(t *testing.T) {
 	tests := []struct {
-		name     string
-		config   *LogConfig
-		wantErr  bool
+		name    string
+		config  *LogConfig
+		wantErr bool
 	}{
 		{
 			name: "json format",
@@ -231,34 +231,34 @@ func TestZapLogger_WithFields(t *testing.T) {
 
 func TestExtractContextFields(t *testing.T) {
 	tests := []struct {
-		name   string
-		ctx    context.Context
-		want   int // expected number of fields
+		name string
+		ctx  context.Context
+		want int // expected number of fields
 	}{
 		{
-			name:   "empty context",
-			ctx:    context.Background(),
-			want:   0,
+			name: "empty context",
+			ctx:  context.Background(),
+			want: 0,
 		},
 		{
-			name:   "with request ID",
-			ctx:    WithRequestID(context.Background(), "req-123"),
-			want:   1,
+			name: "with request ID",
+			ctx:  WithRequestID(context.Background(), "req-123"),
+			want: 1,
 		},
 		{
-			name:   "with trace ID",
-			ctx:    WithTraceID(context.Background(), "trace-456"),
-			want:   1,
+			name: "with trace ID",
+			ctx:  WithTraceID(context.Background(), "trace-456"),
+			want: 1,
 		},
 		{
-			name:   "with user ID",
-			ctx:    WithUserID(context.Background(), "user-789"),
-			want:   1,
+			name: "with user ID",
+			ctx:  WithUserID(context.Background(), "user-789"),
+			want: 1,
 		},
 		{
-			name:   "with all context values",
-			ctx:    WithUserID(WithTraceID(WithRequestID(context.Background(), "req-123"), "trace-456"), "user-789"),
-			want:   3,
+			name: "with all context values",
+			ctx:  WithUserID(WithTraceID(WithRequestID(context.Background(), "req-123"), "trace-456"), "user-789"),
+			want: 3,
 		},
 	}
 
@@ -291,4 +291,3 @@ func TestContextHelpers(t *testing.T) {
 		t.Errorf("WithUserID() failed, got %v", userID)
 	}
 }
-

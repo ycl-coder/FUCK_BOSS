@@ -362,4 +362,3 @@ func (s *GetPostUseCaseTestSuite) TestGetPostUseCase_Execute_CacheTTL() {
 func TestGetPostUseCase_Execute_Suite(t *testing.T) {
 	suite.Run(t, new(GetPostUseCaseTestSuite))
 }
-

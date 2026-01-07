@@ -157,11 +157,11 @@ func TestPost_Publish(t *testing.T) {
 
 func TestNewPost_WithDifferentValues(t *testing.T) {
 	tests := []struct {
-		name    string
-		company string
+		name     string
+		company  string
 		cityCode string
 		cityName string
-		content string
+		content  string
 	}{
 		{
 			name:     "normal post",
@@ -211,4 +211,3 @@ func TestNewPost_WithDifferentValues(t *testing.T) {
 		})
 	}
 }
-

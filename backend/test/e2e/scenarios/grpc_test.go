@@ -23,11 +23,11 @@ import (
 
 	contentv1 "fuck_boss/backend/api/proto/content/v1"
 	"fuck_boss/backend/internal/application/content"
+	"fuck_boss/backend/internal/application/search"
 	"fuck_boss/backend/internal/infrastructure/config"
 	"fuck_boss/backend/internal/infrastructure/logger"
 	"fuck_boss/backend/internal/infrastructure/persistence/postgres"
 	redispersistence "fuck_boss/backend/internal/infrastructure/persistence/redis"
-	"fuck_boss/backend/internal/application/search"
 	grpchandler "fuck_boss/backend/internal/presentation/grpc"
 	"fuck_boss/backend/internal/presentation/middleware"
 )
@@ -68,12 +68,12 @@ func (s *GRPCE2ETestSuite) SetupSuite() {
 				MaxIdleConns: 5,
 			},
 			Redis: config.RedisConfig{
-				Host:        "localhost",
-				Port:        6380,
-				Password:    "",
-				DB:          1,
-				MaxRetries:  3,
-				PoolSize:    10,
+				Host:         "localhost",
+				Port:         6380,
+				Password:     "",
+				DB:           1,
+				MaxRetries:   3,
+				PoolSize:     10,
 				MinIdleConns: 2,
 			},
 			GRPC: config.GRPCConfig{
@@ -393,7 +393,7 @@ func (s *GRPCE2ETestSuite) TestSearchPosts_E2E() {
 	// Note: PostgreSQL simple config may not work well with Chinese, so we check >= 0
 	// If search works, it should be >= 1, but we allow 0 for now due to full-text search limitations
 	assert.GreaterOrEqual(s.T(), searchResp.Total, int32(0))
-	
+
 	// If search found results, verify the post is in the results
 	if searchResp.Total > 0 {
 		found := false
@@ -545,4 +545,3 @@ func (s *GRPCE2ETestSuite) runMigrations() error {
 func TestGRPCE2E(t *testing.T) {
 	suite.Run(t, new(GRPCE2ETestSuite))
 }
-

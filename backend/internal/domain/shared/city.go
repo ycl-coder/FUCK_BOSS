@@ -12,7 +12,7 @@ import (
 type City struct {
 	// code is the city code (e.g., "beijing", "shanghai").
 	code string
-	
+
 	// name is the city name (e.g., "北京", "上海").
 	name string
 }
@@ -67,4 +67,3 @@ func (c City) IsZero() bool {
 func (c City) Equals(other City) bool {
 	return c.code == other.code && c.name == other.name
 }
-

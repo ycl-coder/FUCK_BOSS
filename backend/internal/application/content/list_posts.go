@@ -170,10 +170,10 @@ func (uc *ListPostsUseCase) getCityName(cityCode string) string {
 // Other cities get longer TTL (10 minutes).
 func (uc *ListPostsUseCase) getCacheTTL(cityCode string) time.Duration {
 	popularCities := map[string]bool{
-		"beijing":  true,
-		"shanghai": true,
+		"beijing":   true,
+		"shanghai":  true,
 		"guangzhou": true,
-		"shenzhen": true,
+		"shenzhen":  true,
 	}
 
 	if popularCities[cityCode] {
@@ -211,13 +211,12 @@ func (uc *ListPostsUseCase) toDTOs(posts []*content.Post) []*dto.PostDTO {
 // toDTO converts a Post entity to PostDTO.
 func (uc *ListPostsUseCase) toDTO(post *content.Post) *dto.PostDTO {
 	return &dto.PostDTO{
-		ID:        post.ID().String(),
-		Company:   post.Company().String(),
-		CityCode:  post.City().Code(),
-		CityName:  post.City().Name(),
-		Content:   post.Content().String(),
+		ID:         post.ID().String(),
+		Company:    post.Company().String(),
+		CityCode:   post.City().Code(),
+		CityName:   post.City().Name(),
+		Content:    post.Content().String(),
 		OccurredAt: nil, // Not stored in Post entity
-		CreatedAt: post.CreatedAt(),
+		CreatedAt:  post.CreatedAt(),
 	}
 }
-

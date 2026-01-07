@@ -115,13 +115,12 @@ func (uc *GetPostUseCase) updateCache(ctx context.Context, key string, result *d
 // toDTO converts a Post entity to PostDTO.
 func (uc *GetPostUseCase) toDTO(post *content.Post) *dto.PostDTO {
 	return &dto.PostDTO{
-		ID:        post.ID().String(),
-		Company:   post.Company().String(),
-		CityCode:  post.City().Code(),
-		CityName:  post.City().Name(),
-		Content:   post.Content().String(),
+		ID:         post.ID().String(),
+		Company:    post.Company().String(),
+		CityCode:   post.City().Code(),
+		CityName:   post.City().Name(),
+		Content:    post.Content().String(),
 		OccurredAt: nil, // Not stored in Post entity
-		CreatedAt: post.CreatedAt(),
+		CreatedAt:  post.CreatedAt(),
 	}
 }
-

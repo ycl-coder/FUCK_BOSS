@@ -433,4 +433,3 @@ func TestListPostsUseCase_Execute_EmptyResult(t *testing.T) {
 	mockRepo.AssertExpectations(t)
 	mockCache.AssertExpectations(t)
 }
-

@@ -52,6 +52,14 @@ func (m *MockPostRepository) Search(ctx context.Context, keyword string, city *s
 	return args.Get(0).([]*domaincontent.Post), args.Int(1), args.Error(2)
 }
 
+func (m *MockPostRepository) FindAll(ctx context.Context, page, pageSize int) ([]*domaincontent.Post, int, error) {
+	args := m.Called(ctx, page, pageSize)
+	if args.Get(0) == nil {
+		return nil, args.Int(1), args.Error(2)
+	}
+	return args.Get(0).([]*domaincontent.Post), args.Int(1), args.Error(2)
+}
+
 // MockCacheRepository is a mock implementation of CacheRepository.
 type MockCacheRepository struct {
 	mock.Mock
