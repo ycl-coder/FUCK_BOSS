@@ -275,12 +275,13 @@ func (h *ContentHandler) SearchPosts(w http.ResponseWriter, r *http.Request) {
 	// Convert to use case query
 	query := search.SearchPostsQuery{
 		Keyword:  req.Keyword,
-		CityCode: "",
+		CityCode: nil,
 		Page:     req.Page,
 		PageSize: req.PageSize,
 	}
-	if req.CityCode != nil {
-		query.CityCode = *req.CityCode
+	if req.CityCode != nil && *req.CityCode != "" {
+		cityCode := *req.CityCode
+		query.CityCode = &cityCode
 	}
 
 	// Execute use case
