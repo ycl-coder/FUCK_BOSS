@@ -51,6 +51,9 @@ out/
 dist/
 build/
 .cache/
+frontend/playwright-report/
+frontend/test-results/
+frontend/.playwright/
 
 # Docker
 .docker/
