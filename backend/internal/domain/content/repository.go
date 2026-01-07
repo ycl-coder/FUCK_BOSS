@@ -27,6 +27,12 @@ type PostRepository interface {
 	// The pageSize parameter specifies the number of items per page.
 	FindByCity(ctx context.Context, city shared.City, page, pageSize int) ([]*Post, int, error)
 
+	// FindAll finds all Posts with pagination (across all cities).
+	// Returns a slice of Posts, total count, and an error.
+	// The page parameter is 1-based (page 1 is the first page).
+	// The pageSize parameter specifies the number of items per page.
+	FindAll(ctx context.Context, page, pageSize int) ([]*Post, int, error)
+
 	// Search searches Posts by keyword with optional city filter and pagination.
 	// If city is nil, searches across all cities.
 	// Returns a slice of Posts, total count, and an error.

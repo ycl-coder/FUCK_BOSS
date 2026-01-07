@@ -157,6 +157,73 @@ func (r *PostRepository) FindByCity(ctx context.Context, city shared.City, page,
 	return posts, total, nil
 }
 
+// FindAll finds all Posts with pagination (across all cities).
+// Returns a slice of Posts, total count, and an error.
+// The page parameter is 1-based (page 1 is the first page).
+// The pageSize parameter specifies the number of items per page.
+func (r *PostRepository) FindAll(ctx context.Context, page, pageSize int) ([]*content.Post, int, error) {
+	// Validate pagination parameters
+	if page < 1 {
+		page = 1
+	}
+	if pageSize < 1 {
+		pageSize = 10
+	}
+
+	offset := (page - 1) * pageSize
+
+	// Query for all posts
+	query := `
+		SELECT id, company_name, city_code, city_name, content, created_at
+		FROM posts
+		ORDER BY created_at DESC
+		LIMIT $1 OFFSET $2
+	`
+
+	rows, err := r.db.QueryContext(ctx, query, pageSize, offset)
+	if err != nil {
+		return nil, 0, apperrors.NewDatabaseErrorWithCause("failed to find all posts", err)
+	}
+	defer rows.Close()
+
+	var posts []*content.Post
+	for rows.Next() {
+		var (
+			dbID        string
+			companyName string
+			cityCode    string
+			cityName    string
+			postContent string
+			createdAt   time.Time
+		)
+
+		if err := rows.Scan(&dbID, &companyName, &cityCode, &cityName, &postContent, &createdAt); err != nil {
+			return nil, 0, apperrors.NewDatabaseErrorWithCause("failed to scan post", err)
+		}
+
+		post, err := r.scanPost(dbID, companyName, cityCode, cityName, postContent, createdAt)
+		if err != nil {
+			return nil, 0, err
+		}
+
+		posts = append(posts, post)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, 0, apperrors.NewDatabaseErrorWithCause("failed to iterate posts", err)
+	}
+
+	// Query for total count
+	countQuery := `SELECT COUNT(*) FROM posts`
+	var total int
+	err = r.db.QueryRowContext(ctx, countQuery).Scan(&total)
+	if err != nil {
+		return nil, 0, apperrors.NewDatabaseErrorWithCause("failed to count posts", err)
+	}
+
+	return posts, total, nil
+}
+
 // Search searches Posts by keyword with optional city filter and pagination.
 // If city is nil, searches across all cities.
 // Returns a slice of Posts, total count, and an error.

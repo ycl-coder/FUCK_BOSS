@@ -427,7 +427,7 @@ func runMigrations(db *sql.DB, log logger.Logger) error {
 	} else {
 		// Tables exist, but ensure cities are populated
 		log.Info("Database tables already exist, ensuring cities are populated...")
-		
+
 		insertCitiesSQL := `
 		INSERT INTO cities (code, name, pinyin) VALUES
 			('beijing', '北京', 'beijing'),

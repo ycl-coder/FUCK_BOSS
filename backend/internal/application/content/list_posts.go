@@ -65,16 +65,23 @@ func (uc *ListPostsUseCase) Execute(ctx context.Context, query ListPostsQuery) (
 		pageSize = 20
 	}
 
-	// Create city value object
-	city, err := shared.NewCity(query.CityCode, uc.getCityName(query.CityCode))
-	if err != nil {
-		return nil, apperrors.NewValidationErrorWithDetails("invalid city code", map[string]interface{}{
-			"error": err.Error(),
-		})
-	}
-
 	// Build cache key
-	cacheKey := uc.buildCacheKey(city.Code(), page)
+	var cacheKey string
+	var city *shared.City
+	if query.CityCode != "" {
+		// Create city value object
+		c, err := shared.NewCity(query.CityCode, uc.getCityName(query.CityCode))
+		if err != nil {
+			return nil, apperrors.NewValidationErrorWithDetails("invalid city code", map[string]interface{}{
+				"error": err.Error(),
+			})
+		}
+		city = &c
+		cacheKey = uc.buildCacheKey(city.Code(), page)
+	} else {
+		// All cities
+		cacheKey = uc.buildCacheKey("all", page)
+	}
 
 	// Try to get from cache
 	cachedData, err := uc.cacheRepo.Get(ctx, cacheKey)
@@ -88,7 +95,15 @@ func (uc *ListPostsUseCase) Execute(ctx context.Context, query ListPostsQuery) (
 	}
 
 	// Cache miss or error: query repository
-	posts, total, err := uc.repo.FindByCity(ctx, city, page, pageSize)
+	var posts []*content.Post
+	var total int
+	if city != nil {
+		// Query by city
+		posts, total, err = uc.repo.FindByCity(ctx, *city, page, pageSize)
+	} else {
+		// Query all cities
+		posts, total, err = uc.repo.FindAll(ctx, page, pageSize)
+	}
 	if err != nil {
 		return nil, apperrors.NewDatabaseErrorWithCause("failed to query posts", err)
 	}
@@ -102,16 +117,19 @@ func (uc *ListPostsUseCase) Execute(ctx context.Context, query ListPostsQuery) (
 	}
 
 	// Update cache (non-blocking, errors are ignored)
-	uc.updateCache(ctx, cacheKey, result, city.Code())
+	cityCode := "all"
+	if city != nil {
+		cityCode = city.Code()
+	}
+	uc.updateCache(ctx, cacheKey, result, cityCode)
 
 	return result, nil
 }
 
 // validateQuery validates the list posts query.
+// CityCode is optional - if empty, returns posts from all cities.
 func (uc *ListPostsUseCase) validateQuery(query ListPostsQuery) error {
-	if query.CityCode == "" {
-		return apperrors.NewValidationError("city code is required")
-	}
+	// CityCode is optional, no validation needed
 	return nil
 }
 
