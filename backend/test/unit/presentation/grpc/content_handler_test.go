@@ -20,8 +20,8 @@ import (
 	"fuck_boss/backend/internal/application/content"
 	"fuck_boss/backend/internal/application/dto"
 	"fuck_boss/backend/internal/application/search"
-	apperrors "fuck_boss/backend/pkg/errors"
 	grpchandler "fuck_boss/backend/internal/presentation/grpc"
+	apperrors "fuck_boss/backend/pkg/errors"
 )
 
 // MockCreatePostUseCase is a mock implementation of CreatePostUseCase.
@@ -555,11 +555,11 @@ func TestContentService_SearchPosts_WithoutCity(t *testing.T) {
 // TestContentService_ErrorConversion tests error conversion to gRPC status codes.
 func TestContentService_ErrorConversion(t *testing.T) {
 	testCases := []struct {
-		name           string
-		appError       error
-		expectedCode   codes.Code
-		expectedInMsg  string
-		handler        func(*grpchandler.ContentService, context.Context) (interface{}, error)
+		name          string
+		appError      error
+		expectedCode  codes.Code
+		expectedInMsg string
+		handler       func(*grpchandler.ContentService, context.Context) (interface{}, error)
 	}{
 		{
 			name:          "validation error",
@@ -728,4 +728,3 @@ func TestContentService_ExtractClientIP(t *testing.T) {
 		})
 	}
 }
-
