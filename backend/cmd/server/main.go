@@ -12,9 +12,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	_ "github.com/lib/pq" // PostgreSQL driver
 	"github.com/redis/go-redis/v9"
-	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -137,7 +137,7 @@ func main() {
 			// Allow all origins for development (in production, restrict this)
 			return true
 		}),
-		grpcweb.WithWebsocketOriginFunc(func(reqOrigin string) bool {
+		grpcweb.WithWebsocketOriginFunc(func(req *http.Request) bool {
 			// Allow all origins for WebSocket connections
 			return true
 		}),
@@ -146,7 +146,7 @@ func main() {
 	// Start HTTP server for gRPC Web
 	httpAddr := fmt.Sprintf(":%d", cfg.GRPC.Port)
 	httpServer := &http.Server{
-		Addr:    httpAddr,
+		Addr: httpAddr,
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if wrappedServer.IsGrpcWebRequest(r) || wrappedServer.IsAcceptableGrpcCorsRequest(r) {
 				wrappedServer.ServeHTTP(w, r)
