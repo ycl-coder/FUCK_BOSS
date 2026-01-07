@@ -2,6 +2,26 @@
 
 前端端到端测试，使用 Playwright 框架。
 
+## 安装
+
+### 1. 安装依赖
+
+```bash
+npm install
+```
+
+### 2. 安装 Playwright 浏览器
+
+```bash
+npx playwright install chromium
+```
+
+或者安装所有浏览器：
+
+```bash
+npx playwright install
+```
+
 ## 测试覆盖
 
 ### 1. 创建和查看流程 (`create-and-view.spec.ts`)
@@ -22,18 +42,6 @@
 - 验证活动菜单项高亮
 
 ## 运行测试
-
-### 安装依赖
-
-```bash
-npm install
-```
-
-### 安装 Playwright 浏览器
-
-```bash
-npx playwright install
-```
 
 ### 运行所有 E2E 测试
 
@@ -86,23 +94,68 @@ npx playwright test test/e2e/flows/create-and-view.spec.ts
 npx playwright show-report
 ```
 
+## 前置条件
+
+### 1. Node.js 版本
+
+确保使用 Node.js 20+：
+
+```bash
+# 使用 nvm
+nvm use
+
+# 或手动切换
+nvm use 20
+```
+
+### 2. 后端服务
+
+确保后端 gRPC 服务正在运行：
+
+```bash
+cd ../backend
+go run cmd/server/main.go
+```
+
+或者使用 Docker Compose：
+
+```bash
+make docker-up
+```
+
+### 3. 数据库和 Redis
+
+确保 PostgreSQL 和 Redis 服务可用（通过 Docker Compose 或本地安装）。
+
 ## 注意事项
 
-1. **后端服务**: 确保后端 gRPC 服务正在运行（`http://localhost:50051`）
-2. **数据库**: 测试使用真实的后端服务，需要确保数据库和 Redis 可用
-3. **测试数据**: 测试会创建真实的测试数据，可能需要定期清理
-4. **网络超时**: 如果网络较慢，可能需要调整 `timeout` 配置
+1. **测试数据**: 测试会创建真实的测试数据，可能需要定期清理
+2. **网络超时**: 如果网络较慢，可能需要调整 `timeout` 配置
+3. **并发测试**: 默认并行运行测试，如果遇到资源问题，可以在 `playwright.config.ts` 中调整 `workers` 数量
 
 ## 故障排除
 
-### 测试失败：无法连接到服务器
+### 错误：`playwright: command not found`
+
+**原因**: Playwright 依赖未安装或浏览器未安装
+
+**解决方案**:
+```bash
+# 1. 安装依赖
+npm install
+
+# 2. 安装浏览器
+npx playwright install chromium
+```
+
+### 错误：无法连接到服务器
 
 确保前端开发服务器正在运行：
 ```bash
 npm run dev
 ```
 
-### 测试失败：gRPC 错误
+### 错误：gRPC 错误
 
 确保后端服务正在运行：
 ```bash
@@ -110,10 +163,18 @@ cd ../backend
 go run cmd/server/main.go
 ```
 
+### 错误：Node.js 版本不兼容
+
+升级到 Node.js 20+：
+```bash
+nvm use 20
+# 或
+nvm install 20 && nvm use 20
+```
+
 ### 浏览器未安装
 
 运行：
 ```bash
-npx playwright install
+npx playwright install chromium
 ```
-
