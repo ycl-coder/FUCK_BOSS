@@ -33,15 +33,22 @@ test.describe('Create Post and View Flow', () => {
     // Fill company name
     await page.fill('input[placeholder*="公司名称"]', companyName)
 
-    // Select city
-    await page.click('div.ant-select-selector')
-    await page.click(`text=${cityName}`)
+    // Select city - use getByRole for better reliability with Ant Design Select
+    const citySelect = page.getByRole('combobox', { name: /所在城市|请选择城市/ })
+    await citySelect.click()
+    // Wait for dropdown to open and be stable
+    await page.waitForSelector('.ant-select-dropdown', { state: 'visible', timeout: 5000 })
+    // Wait for the option to be visible and stable (Ant Design uses portal, may animate)
+    const cityOption = page.locator(`.ant-select-item:has-text("${cityName}")`).first()
+    await cityOption.waitFor({ state: 'visible', timeout: 5000 })
+    // Use force click if element is stable but Playwright thinks it's not
+    await cityOption.click({ force: true })
 
     // Fill content
     await page.fill('textarea[placeholder*="曝光内容"]', content)
 
-    // Step 3: Submit the form
-    await page.click('button:has-text("提交")')
+    // Step 3: Submit the form (button text is "发布" not "提交")
+    await page.getByRole('button', { name: '发布' }).click()
     
     // Wait for form submission (may show success message or redirect)
     await page.waitForTimeout(2000)
@@ -83,10 +90,10 @@ test.describe('Create Post and View Flow', () => {
 
     // Verify form elements are present
     await expect(page.locator('input[placeholder*="公司名称"]')).toBeVisible()
-    await expect(page.locator('div.ant-select-selector')).toBeVisible()
+    await expect(page.getByRole('combobox', { name: /所在城市|请选择城市/ })).toBeVisible()
     await expect(page.locator('textarea[placeholder*="曝光内容"]')).toBeVisible()
-    await expect(page.locator('button:has-text("提交")')).toBeVisible()
-    await expect(page.locator('button:has-text("重置")')).toBeVisible()
+    await expect(page.getByRole('button', { name: '发布' })).toBeVisible()
+    await expect(page.getByRole('button', { name: '重置' })).toBeVisible()
   })
 
   test('should show validation errors for empty form', async ({ page }) => {
@@ -95,7 +102,7 @@ test.describe('Create Post and View Flow', () => {
     await expect(page).toHaveURL(/.*\/create/)
 
     // Try to submit empty form
-    await page.click('button:has-text("提交")')
+    await page.getByRole('button', { name: '发布' }).click()
 
     // Wait for validation messages
     await page.waitForTimeout(500)
