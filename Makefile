@@ -63,6 +63,10 @@ frontend-verify: ## 验证前端构建（TypeScript 编译 + Vite 构建）
 	@echo "🔍 验证前端项目..."
 	cd frontend && npm run build && echo "✅ 前端构建验证通过"
 
+# Database seed commands
+seed-data: ## 清理并插入12条模拟数据到数据库
+	cd backend && go run scripts/seed_data.go
+
 frontend-generate-grpc: ## 生成前端 gRPC Web 代码
 	cd frontend && ./scripts/generate-grpc.sh
 
