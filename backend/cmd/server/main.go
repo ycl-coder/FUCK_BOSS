@@ -6,7 +6,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -14,6 +14,7 @@ import (
 
 	_ "github.com/lib/pq" // PostgreSQL driver
 	"github.com/redis/go-redis/v9"
+	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -130,26 +131,45 @@ func main() {
 	// Enable reflection for gRPC tools (e.g., grpcurl, grpcui)
 	reflection.Register(grpcServer)
 
-	// Start server
-	addr := fmt.Sprintf(":%d", cfg.GRPC.Port)
-	listener, err := net.Listen("tcp", addr)
-	if err != nil {
-		log.Error("Failed to listen", zap.String("address", addr), zap.Error(err))
-		os.Exit(1)
+	// Wrap gRPC server with gRPC Web support
+	wrappedServer := grpcweb.WrapServer(grpcServer,
+		grpcweb.WithOriginFunc(func(origin string) bool {
+			// Allow all origins for development (in production, restrict this)
+			return true
+		}),
+		grpcweb.WithWebsocketOriginFunc(func(reqOrigin string) bool {
+			// Allow all origins for WebSocket connections
+			return true
+		}),
+	)
+
+	// Start HTTP server for gRPC Web
+	httpAddr := fmt.Sprintf(":%d", cfg.GRPC.Port)
+	httpServer := &http.Server{
+		Addr:    httpAddr,
+		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if wrappedServer.IsGrpcWebRequest(r) || wrappedServer.IsAcceptableGrpcCorsRequest(r) {
+				wrappedServer.ServeHTTP(w, r)
+			} else {
+				// Fallback to standard gRPC for non-Web requests
+				grpcServer.ServeHTTP(w, r)
+			}
+		}),
 	}
 
 	log.Info("gRPC server listening",
-		zap.String("address", addr),
+		zap.String("address", httpAddr),
 		zap.Int("max_recv_msg_size", cfg.GRPC.MaxRecvMsgSize),
 		zap.Int("max_send_msg_size", cfg.GRPC.MaxSendMsgSize),
+		zap.Bool("grpc_web_enabled", true),
 	)
 
 	// Start server in a goroutine
 	serverErrors := make(chan error, 1)
 	go func() {
-		log.Info("gRPC server started")
-		if err := grpcServer.Serve(listener); err != nil {
-			serverErrors <- fmt.Errorf("gRPC server error: %w", err)
+		log.Info("gRPC server started (with gRPC Web support)")
+		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			serverErrors <- fmt.Errorf("HTTP server error: %w", err)
 		}
 	}()
 
@@ -169,10 +189,15 @@ func main() {
 	log.Info("Starting graceful shutdown...")
 
 	// Create shutdown context with timeout
-	shutdownCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
+	shutdownCtx, cancelShutdown := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancelShutdown()
 
-	// Stop accepting new connections
+	// Shutdown HTTP server
+	if err := httpServer.Shutdown(shutdownCtx); err != nil {
+		log.Error("Error during HTTP server shutdown", zap.Error(err))
+	}
+
+	// Stop gRPC server gracefully
 	grpcServer.GracefulStop()
 
 	// Close database connection
