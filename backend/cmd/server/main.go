@@ -28,6 +28,7 @@ import (
 	redispersistence "fuck_boss/backend/internal/infrastructure/persistence/redis"
 	grpchandler "fuck_boss/backend/internal/presentation/grpc"
 	"fuck_boss/backend/internal/presentation/middleware"
+	resthandler "fuck_boss/backend/internal/presentation/rest"
 )
 
 func main() {
@@ -143,18 +144,50 @@ func main() {
 		}),
 	)
 
-	// Start HTTP server for gRPC Web
+	// Create REST API handler
+	restHandler := resthandler.NewContentHandler(
+		createUseCase,
+		listUseCase,
+		getUseCase,
+		searchUseCase,
+		log,
+	)
+
+	// Create HTTP mux for routing
+	mux := http.NewServeMux()
+
+	// REST API routes
+	mux.HandleFunc("/api/posts", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			restHandler.CreatePost(w, r)
+		} else {
+			restHandler.ListPosts(w, r)
+		}
+	})
+	mux.HandleFunc("/api/posts/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/api/posts/" {
+			restHandler.ListPosts(w, r)
+		} else {
+			restHandler.GetPost(w, r)
+		}
+	})
+	mux.HandleFunc("/api/posts/search", restHandler.SearchPosts)
+
+	// gRPC Web handler
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if wrappedServer.IsGrpcWebRequest(r) || wrappedServer.IsAcceptableGrpcCorsRequest(r) {
+			wrappedServer.ServeHTTP(w, r)
+		} else {
+			// Fallback to standard gRPC for non-Web requests
+			grpcServer.ServeHTTP(w, r)
+		}
+	})
+
+	// Start HTTP server for gRPC Web and REST API
 	httpAddr := fmt.Sprintf(":%d", cfg.GRPC.Port)
 	httpServer := &http.Server{
-		Addr: httpAddr,
-		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if wrappedServer.IsGrpcWebRequest(r) || wrappedServer.IsAcceptableGrpcCorsRequest(r) {
-				wrappedServer.ServeHTTP(w, r)
-			} else {
-				// Fallback to standard gRPC for non-Web requests
-				grpcServer.ServeHTTP(w, r)
-			}
-		}),
+		Addr:    httpAddr,
+		Handler: mux,
 	}
 
 	log.Info("gRPC server listening",

@@ -23,40 +23,43 @@ class GrpcWebContentServiceClient implements ContentServiceClient {
   }
 
   private async call<TRequest, TResponse>(
-    service: string,
-    method: string,
-    request: TRequest
+    endpoint: string,
+    request: TRequest,
+    method: 'GET' | 'POST' = 'POST'
   ): Promise<TResponse> {
-    // gRPC Web URL format: /package.service/method
-    const url = `${this.baseUrl}/${service}/${method}`
+    // Use REST API endpoint
+    const url = `${this.baseUrl}${endpoint}`
     
     try {
-      const response = await fetch(url, {
-        method: 'POST',
+      const options: RequestInit = {
+        method,
         headers: {
-          'Content-Type': 'application/grpc-web+json',
-          'Accept': 'application/grpc-web+json',
-          'X-Grpc-Web': '1',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
-        body: JSON.stringify(request),
-      })
-
-      if (!response.ok) {
-        let errorMessage = `HTTP ${response.status}: ${response.statusText}`
-        try {
-          const errorData = await response.json()
-          errorMessage = errorData.message || errorData.error || errorMessage
-        } catch {
-          const errorText = await response.text()
-          if (errorText) {
-            errorMessage = errorText
-          }
-        }
-        throw new Error(errorMessage)
       }
 
-      const data = await response.json()
-      return data as TResponse
+      if (method === 'POST' && request) {
+        options.body = JSON.stringify(request)
+      } else if (method === 'GET' && request) {
+        // Convert request to query parameters
+        const params = new URLSearchParams()
+        Object.entries(request as Record<string, unknown>).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== '') {
+            params.append(key, String(value))
+          }
+        })
+        const queryString = params.toString()
+        if (queryString) {
+          const separator = url.includes('?') ? '&' : '?'
+          const urlWithQuery = `${url}${separator}${queryString}`
+          const response = await fetch(urlWithQuery, options)
+          return this.handleResponse<TResponse>(response)
+        }
+      }
+
+      const response = await fetch(url, options)
+      return this.handleResponse<TResponse>(response)
     } catch (error) {
       if (error instanceof Error) {
         throw error
@@ -65,51 +68,63 @@ class GrpcWebContentServiceClient implements ContentServiceClient {
     }
   }
 
+  private async handleResponse<TResponse>(response: Response): Promise<TResponse> {
+    if (!response.ok) {
+      let errorMessage = `HTTP ${response.status}: ${response.statusText}`
+      try {
+        const errorData = await response.json()
+        errorMessage = errorData.error || errorData.message || errorMessage
+      } catch {
+        const errorText = await response.text()
+        if (errorText) {
+          errorMessage = errorText
+        }
+      }
+      throw new Error(errorMessage)
+    }
+
+    const data = await response.json()
+    return data as TResponse
+  }
+
   async createPost(request: CreatePostRequest): Promise<{ postId: string; createdAt: number }> {
-    const response = await this.call<CreatePostRequest, { postId: string; createdAt: number }>(
-      'content.v1.ContentService',
-      'CreatePost',
-      request
+    return this.call<CreatePostRequest, { postId: string; createdAt: number }>(
+      '/api/posts',
+      request,
+      'POST'
     )
-    return response
   }
 
   async listPosts(cityCode: string, page: number, pageSize: number): Promise<PostListResponse> {
-    const response = await this.call<
+    return this.call<
       { cityCode: string; page: number; pageSize: number },
       PostListResponse
     >(
-      'content.v1.ContentService',
-      'ListPosts',
-      { cityCode: cityCode || '', page, pageSize }
+      '/api/posts',
+      { cityCode: cityCode || '', page, pageSize },
+      'GET'
     )
-    return response
   }
 
   async getPost(postId: string): Promise<Post> {
-    const response = await this.call<{ postId: string }, { post: Post }>(
-      'content.v1.ContentService',
-      'GetPost',
-      { postId }
+    return this.call<never, Post>(
+      `/api/posts/${postId}`,
+      undefined as never,
+      'GET'
     )
-    if (!response.post) {
-      throw new Error('Post not found')
-    }
-    return response.post
   }
 
   async searchPosts(request: SearchRequest): Promise<SearchResponse> {
-    const response = await this.call<SearchRequest, SearchResponse>(
-      'content.v1.ContentService',
-      'SearchPosts',
+    return this.call<SearchRequest, SearchResponse>(
+      '/api/posts/search',
       {
         keyword: request.keyword,
-        cityCode: request.cityCode || '',
+        cityCode: request.cityCode,
         page: request.page || 1,
         pageSize: request.pageSize || 20,
-      }
+      },
+      'POST'
     )
-    return response
   }
 }
 
