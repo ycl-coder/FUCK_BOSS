@@ -379,6 +379,26 @@ func runMigrations(db *sql.DB, log logger.Logger) error {
 			return fmt.Errorf("failed to create cities table: %w", err)
 		}
 
+		// Insert common cities (use ON CONFLICT to handle duplicates)
+		insertCitiesSQL := `
+		INSERT INTO cities (code, name, pinyin) VALUES
+			('beijing', '北京', 'beijing'),
+			('shanghai', '上海', 'shanghai'),
+			('guangzhou', '广州', 'guangzhou'),
+			('shenzhen', '深圳', 'shenzhen'),
+			('hangzhou', '杭州', 'hangzhou'),
+			('chengdu', '成都', 'chengdu'),
+			('wuhan', '武汉', 'wuhan'),
+			('nanjing', '南京', 'nanjing'),
+			('xian', '西安', 'xian'),
+			('chongqing', '重庆', 'chongqing')
+		ON CONFLICT (code) DO NOTHING;
+		`
+
+		if _, err := db.ExecContext(ctx, insertCitiesSQL); err != nil {
+			return fmt.Errorf("failed to insert cities: %w", err)
+		}
+
 		// Create posts table
 		postsSQL := `
 		CREATE TABLE IF NOT EXISTS posts (
@@ -405,7 +425,29 @@ func runMigrations(db *sql.DB, log logger.Logger) error {
 
 		log.Info("Database migrations completed")
 	} else {
-		log.Info("Database tables already exist, skipping migrations")
+		// Tables exist, but ensure cities are populated
+		log.Info("Database tables already exist, ensuring cities are populated...")
+		
+		insertCitiesSQL := `
+		INSERT INTO cities (code, name, pinyin) VALUES
+			('beijing', '北京', 'beijing'),
+			('shanghai', '上海', 'shanghai'),
+			('guangzhou', '广州', 'guangzhou'),
+			('shenzhen', '深圳', 'shenzhen'),
+			('hangzhou', '杭州', 'hangzhou'),
+			('chengdu', '成都', 'chengdu'),
+			('wuhan', '武汉', 'wuhan'),
+			('nanjing', '南京', 'nanjing'),
+			('xian', '西安', 'xian'),
+			('chongqing', '重庆', 'chongqing')
+		ON CONFLICT (code) DO NOTHING;
+		`
+
+		if _, err := db.ExecContext(ctx, insertCitiesSQL); err != nil {
+			log.Warn("Failed to insert cities (may already exist)", zap.Error(err))
+		} else {
+			log.Info("Cities populated successfully")
+		}
 	}
 
 	return nil
